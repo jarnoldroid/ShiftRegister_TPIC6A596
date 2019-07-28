@@ -12,7 +12,10 @@ class ShiftRegister
 	public:
 		ShiftRegister(uint8_t clockPin, uint8_t latchPin, uint8_t enablePin, uint8_t clearPin, uint8_t dataPin);
         void begin();
-        void updateShiftRegister(byte b);
+        void updateShiftRegister(byte data);
+        void updateShiftRegister(uint16_t data);
+        void updateShiftRegister(uint32_t data);
+        void clearShiftRegister();
 	
 	private:
 		uint8_t  _clockPin;
@@ -20,6 +23,7 @@ class ShiftRegister
         uint8_t  _enablePin;
         uint8_t  _clearPin;
         uint8_t  _dataPin;
+        void latchOutput();
 };
 
 #endif

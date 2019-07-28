@@ -27,9 +27,43 @@ void ShiftRegister::begin()
     digitalWrite(_clearPin, HIGH);
 }
 
-void ShiftRegister::updateShiftRegister(byte b)
+void ShiftRegister::updateShiftRegister(byte data)
 {
-    digitalWrite(_latchPin, LOW);
-    shiftOut(_dataPin, _clockPin, MSBFIRST, b);
+    shiftOut(_dataPin, _clockPin, MSBFIRST, data);
+    
+    latchOutput();
+}
+
+void ShiftRegister::updateShiftRegister(uint16_t data)
+{
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 8));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data));
+    
+    latchOutput();
+}
+
+void ShiftRegister::updateShiftRegister(uint32_t data)
+{
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 24));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 16));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 8));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data));
+
+    latchOutput();
+}
+
+void ShiftRegister::clearShiftRegister()
+{
+    uint32_t data = 0;
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 24));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 16));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data >> 8));
+    shiftOut(_dataPin, _clockPin, MSBFIRST, byte(data));
+
+    latchOutput();
+}
+
+void ShiftRegister::latchOutput() {
     digitalWrite(_latchPin, HIGH);
+    digitalWrite(_latchPin, LOW);
 }
